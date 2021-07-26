@@ -1,5 +1,4 @@
 <template>
-<!-- https://codesandbox.io/s/fervent-clarke-mt997?file=/src/App.vue:2946-2951 -->
   <div class="home">
     <!-- pc -->
     <div class="pc" v-if="!isMb">
@@ -81,7 +80,7 @@
                 </button>
                 <!-- emoji選單 -->
                 <transition name="fade">
-                  <div v-if="emojiMenu" class="pc__comment-bar--emoji-wrap">
+                  <div v-if="menu.emoji" class="pc__comment-bar--emoji-wrap">
                     <span v-for="(emoji, index) in emojis" :key="index" class="pointer" :ref="`emoji_${index}`" @click="submitEmoji(index)">{{emoji}}</span>
                     <div class="pc__comment-bar--triangle"></div>
                   </div>
@@ -95,7 +94,36 @@
     <!-- mb -->
     <div class="mb" v-else>
       <div class="mb__wrap">
-        <div class="mb__unavailable">此網站手機版尚未開放<br/>請使用電腦開啟服務</div>
+        <div class="mb__video-wrap">
+          <video ref="myVideo" />
+          <!-- live/時間 -->
+          <div class="pc__video-label mb__video-label">
+            <div class="h-align">
+              <div v-if="!stream.close" ref="live" class="pc__video-label--live">LIVE</div>
+              <div v-else class="pc__video-label--live pc__video-label--close">LIVE</div>
+              <div class="pc__video-label--time" :class="{'pc__video-label--time-end': stream.close}">{{timeLabel}}</div>
+            </div>
+            <div class="mb__video-label--setting">
+              <button class="mb__btn-wrap" ref="settingIcon" @click="settingMenuHandler()">
+                <img src="@/assets/icon/more.svg"/>
+              </button>
+              <!-- 控制麥克風/關閉視訊/鏡頭 -->
+              <div v-if="menu.setting" class="pc__video-tool-wrap mb__video-tool-wrap">
+                <button class="pc__video-tool mb__video-tool pointer" ref="audioIcon" :disabled="stream.close" @click="audioHandler()">
+                  <img v-if="stream.audio" class="pc__video-tool--audio" src="@/assets/icon/microphone-2.svg"/>
+                  <img v-else class="pc__video-tool--audio" src="@/assets/icon/microphone-slash.svg"/>
+                </button>
+                <button class="pc__video-tool mb__video-tool pointer" ref="closeIcon" :disabled="stream.close" @click="closeStreemHandler()">
+                  <img class="pc__video-tool--close" src="@/assets/icon/add.svg"/>
+                </button>
+                <button class="pc__video-tool mb__video-tool pointer" ref="videoIcon" :disabled="stream.close" @click="videoHandler()">
+                  <img v-if="stream.video" class="pc__video-tool--video" src="@/assets/icon/video.svg"/>
+                  <img v-else class="pc__video-tool--video" src="@/assets/icon/video-slash.svg"/>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -114,7 +142,10 @@ export default {
       interval: null,
       time: 0,
       isMb: false,
-      emojiMenu: false,
+      menu: {
+        emoji: false,
+        setting: false,
+      },
       emojiArr: [],
       videoConstraints: { 
         audio: true, 
@@ -254,7 +285,12 @@ export default {
     // emoji選單
     emojiMenuHandler() {
       this.btnClickAnimation("emojiIcon");
-      this.emojiMenu = !this.emojiMenu;
+      this.menu.emoji = !this.menu.emoji;
+    },
+    // emoji選單
+    settingMenuHandler() {
+      this.btnClickAnimation("settingIcon");
+      this.menu.setting = !this.menu.setting;
     },
     // 送出愛心
     submitHeart() {
@@ -266,7 +302,7 @@ export default {
       this.btnClickAnimation("emoji_" + index);
       this.emojiArr.push(this.emojis[index]);
       // 關閉 emoji選單
-      this.emojiMenu = false;
+      this.menu.emoji = false;
     },
     // audio 開關
     audioHandler() {
@@ -615,14 +651,48 @@ export default {
   .mb {
     &__wrap {
       position: absolute;
-      top: 80px;
+      top: 0;
       left: 50%;
       transform: translateX(-50%);
+      overflow: hidden;
+      width: 100%;
+      height: 100vh;
     }
-    &__unavailable {
-      color: $text-gray;
-      font-size: 18px;
-      font-weight: 500;
+    &__video-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      video {}
+    }
+    &__video-label {
+      top: 50px;
+      width: 100vw;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    &__btn-wrap {
+      background-color: rgba($border-black, 0.8);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &__video-tool-wrap {
+      top: 0;
+      display: block;
+      margin-top: 50px;
+      right: -20px;
+    }
+    &__video-tool {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 12px;
+      &:hover {
+        border: none;
+      }
     }
   }
 }
