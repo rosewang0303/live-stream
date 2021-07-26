@@ -48,15 +48,17 @@
             <!-- 留言串 -->
             <div v-else>
               <div class="pc__comment-item" v-for="(row, index) in commentList" :key="index">
-              <div class="pc__comment-item--img-wrap">
-                <img src="@/assets/icon/user.svg"/>
+                <div class="pc__comment-item--img-wrap">
+                  <img src="@/assets/icon/user.svg"/>
+                </div>
+                <div class="pc__comment-item--text-wrap">
+                  <span class="pc__comment-item--user-name">{{row.account}}</span>
+                  <span class="pc__comment-item--comment">{{row.comment}}</span>
+                </div>
               </div>
-              <div class="pc__comment-item--text-wrap">
-                <span class="pc__comment-item--user-name">{{row.account}}</span>
-                <span class="pc__comment-item--comment">{{row.comment}}</span>
-              </div>
+              <div v-if="stream.close" class="pc__comment-item--end">已結束視訊</div>
             </div>
-            </div>
+            
           </div>
           <!-- 控制留言 -->
           <div class="pc__comment-bar-wrap">
@@ -277,16 +279,15 @@ export default {
     // 串流 開關
     closeStreemHandler() {
       this.btnClickAnimation("closeIcon");
+      this.stream.close = true;
       // 全部關閉
       this.videoStream.getTracks().forEach(
         function(track) { 
           track.stop(); 
         }
       );
-      this.stream.close = true;
       // 計數
       clearInterval(this.interval);
-      this.time = 0;
     },
     // 計數
     countTime() {
@@ -478,6 +479,11 @@ export default {
       display: flex;
       align-items: flex-start;
       margin-bottom: 14px;
+      &--end {
+        color: $text-gray;
+        font-size: 16px;
+        margin-top: 30px;
+      }
       &--empty {
         color: $text-gray;
         font-size: 16px;
