@@ -103,7 +103,7 @@
 <script>
 import {TweenMax, TimelineMax, Power0, Power1, Power4} from 'gsap';
 
-let emojiList = "👍,🎉,😂,😯,😢,😡";
+let emojiList = "😆,🤣,😍,🙄,😡,😱";
 
 export default {
   name: 'Home',
