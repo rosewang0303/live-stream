@@ -58,7 +58,6 @@
               </div>
               <div v-if="stream.close" class="pc__comment-item--end">已結束視訊</div>
             </div>
-            
           </div>
           <!-- 控制留言 -->
           <div class="pc__comment-bar-wrap">
@@ -95,7 +94,9 @@
     </div>
     <!-- mb -->
     <div class="mb" v-else>
-
+      <div class="mb__wrap">
+        <div class="mb__unavailable">此網站手機版尚未開放<br/>請使用電腦開啟服務</div>
+      </div>
     </div>
   </div>
 </template>
@@ -136,10 +137,22 @@ export default {
   },
   mounted() {
     this.videoInit();
+    // 判斷裝置
+    this.isMb = this.checkIsMb();
   },
   components: {
   },
   methods: {
+    checkIsMb(){
+      let isIos = !!navigator.userAgent.match(/(iphone|ipad|ios|ipad)/ig);
+      let isAndroid = !!navigator.userAgent.match(/(android)/ig);
+
+      if(isIos || isAndroid){
+        return true;
+      }else{
+        return false;
+      }
+    },
     // 視訊鏡頭 初始
     videoInit() {
       if(navigator.mediaDevices === undefined){
@@ -601,7 +614,15 @@ export default {
   }
   .mb {
     &__wrap {
-      
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    &__unavailable {
+      color: $text-gray;
+      font-size: 18px;
+      font-weight: 500;
     }
   }
 }
