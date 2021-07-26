@@ -119,6 +119,9 @@ export default {
         audio: true, 
         video: true
       },
+      animation: {
+        live: null,
+      },
       stream: {
         audio: true, 
         video: true,
@@ -188,7 +191,7 @@ export default {
     // live 動畫
     liveAnimation() {
       this.$refs.live.style.backgroundColor = "#f84e64";
-      TweenMax.to(this.$refs.live, 1, {
+      this.animation.live = TweenMax.to(this.$refs.live, 1, {
         css: {
           backgroundColor: "rgb(48, 48, 48)",
         },
@@ -280,6 +283,7 @@ export default {
     closeStreemHandler() {
       this.btnClickAnimation("closeIcon");
       this.stream.close = true;
+      this.animation.live.kill();
       // 全部關閉
       this.videoStream.getTracks().forEach(
         function(track) { 
