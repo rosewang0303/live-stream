@@ -18,7 +18,7 @@
           <div class="pc__video-label">
             <div v-if="!stream.close" ref="live" class="pc__video-label--live">LIVE</div>
             <div v-else class="pc__video-label--live pc__video-label--close">LIVE</div>
-            <div class="pc__video-label--time">{{timeLabel}}</div>
+            <div class="pc__video-label--time" :class="{'pc__video-label--time-end': stream.close}">{{timeLabel}}</div>
           </div>
           <!-- 控制麥克風/關閉視訊/鏡頭 -->
           <div class="pc__video-tool-wrap">
@@ -407,6 +407,9 @@ export default {
         font-size: 14px;
         font-weight: 500;
         border-radius: 20px;
+      }
+      &--time-end {
+        color: rgba($text-gray, 0.6);
       }
     }
     &__video-close {
