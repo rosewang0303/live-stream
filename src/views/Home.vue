@@ -481,6 +481,7 @@ export default {
       transform: translateX(-50%);
       display: flex;
       align-items: center;
+      z-index: 2;
     }
     &__video-tool {
       background-color: rgba($border-black, 0.8);
@@ -510,6 +511,7 @@ export default {
       bottom: 20px;
       display: flex;
       align-items: center;
+      z-index: 1;
       > span {
         display: flex;
         align-items: center;
