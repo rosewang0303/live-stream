@@ -503,9 +503,8 @@ export default {
         }
       }
       &--text-wrap {
+        padding-top: 3px;
         width: calc(100% - 30px);
-      }
-      >div {
         text-align: left;
       }
       &--user-name {
