@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <!-- pc -->
-    <div class="pc" v-if="!isMb">
+    <div class="pc">
       <div class="pc__wrap">
         <div class="pc__video-wrap">
           <video ref="myVideo" />
@@ -18,6 +18,10 @@
             <div v-if="!stream.close" ref="live" class="pc__video-label--live">LIVE</div>
             <div v-else class="pc__video-label--live pc__video-label--close">LIVE</div>
             <div class="pc__video-label--time" :class="{'pc__video-label--time-end': stream.close}">{{timeLabel}}</div>
+            <div v-if="!stream.close" class="pc__video-label--watch">
+              <img src="@/assets/icon/eye.svg"/>
+              <div>{{watch}}</div>
+            </div>
           </div>
           <!-- 控制麥克風/關閉視訊/鏡頭 -->
           <div class="pc__video-tool-wrap">
@@ -92,16 +96,20 @@
       </div>
     </div>
     <!-- mb -->
-    <div class="mb" v-else>
+    <div class="mb">
       <div class="mb__wrap">
         <div class="mb__video-wrap">
           <video ref="myVideo" />
           <!-- live/時間 -->
           <div class="pc__video-label mb__video-label">
-            <div class="h-align">
+            <div class="h-align mb__video-label-wrap">
               <div v-if="!stream.close" ref="live" class="pc__video-label--live">LIVE</div>
               <div v-else class="pc__video-label--live pc__video-label--close">LIVE</div>
               <div class="pc__video-label--time" :class="{'pc__video-label--time-end': stream.close}">{{timeLabel}}</div>
+              <div v-if="!stream.close" class="pc__video-label--watch">
+                <img src="@/assets/icon/eye.svg"/>
+                <div>{{watch}}</div>
+              </div>
             </div>
             <div class="mb__video-label--setting">
               <button class="mb__btn-wrap" ref="settingIcon" @click="settingMenuHandler()">
@@ -141,6 +149,7 @@ export default {
       videoStream: null,
       interval: null,
       time: 0,
+      watch: 330,
       isMb: false,
       menu: {
         emoji: false,
@@ -392,6 +401,7 @@ export default {
   width: 100%;
   height: 100%;
   .pc {
+    display: block;
     &__wrap {
       display: flex;
       align-items: flex-start;
@@ -439,11 +449,14 @@ export default {
       transform: translateX(-50%);
       display: flex;
       align-items: center;
+      background-color: rgba($border-black, 0.8);
+      padding: 2px 14px;
+      border-radius: 30px;
       &--live {
         color: $white;
         background-color: rgba($red, 0.8);
-        padding: 5px 14px;
-        font-size: 14px;
+        padding: 2px 10px;
+        font-size: 10px;
         font-weight: 900;
         border-radius: 20px;
         letter-spacing: 2px;
@@ -455,7 +468,7 @@ export default {
       }
       &--time {
         color: $white;
-        background-color: rgba($border-black, 0.8);
+        // background-color: rgba($border-black, 0.8);
         padding: 5px 14px;
         font-size: 14px;
         font-weight: 500;
@@ -463,6 +476,22 @@ export default {
       }
       &--time-end {
         color: rgba($text-gray, 0.6);
+      }
+      &--watch {
+        display: flex;
+        align-items: center;
+        color: $white;
+        font-size: 10px;
+        // background-color: rgba($border-black, 0.8);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-weight: 500;
+        margin-left: 12px;
+        img {
+          margin-right: 4px;
+          width: 14px;
+          height: 14px;
+        }
       }
     }
     &__video-close {
@@ -651,6 +680,7 @@ export default {
     }
   }
   .mb {
+    display: none;
     &__wrap {
       position: absolute;
       top: 0;
@@ -667,11 +697,20 @@ export default {
       transform: translate(-50%, -50%);
       video {}
     }
+    &__video-label-wrap {
+      background-color: rgba($border-black, 0.8);
+      padding: 2px 14px;
+      border-radius: 20px;
+    }
     &__video-label {
       top: 50px;
       width: 100vw;
       justify-content: space-between;
+      background-color: unset;
       padding: 0 20px;
+      &--time {
+        background-color: rgba($border-black, 0.8);
+      }
     }
     &__btn-wrap {
       background-color: rgba($border-black, 0.8);
@@ -695,6 +734,16 @@ export default {
       &:hover {
         border: none;
       }
+    }
+  }
+}
+@media screen and (max-width: 992px){
+  .home {
+    .pc {
+      display: none;
+    }
+    .mb {
+      display: block;
     }
   }
 }
